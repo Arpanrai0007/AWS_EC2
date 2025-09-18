@@ -27,4 +27,4 @@ jobs:
             --image-id ami-02d26659fd82cf299 \
             --count 1 \
             --instance-type t2.micro \
-            --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=Test_Server1}]'
+            --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=Test_Server2}]'
