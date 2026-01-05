@@ -10,5 +10,10 @@ pool:
   name: Self-hosted
 
 steps:
-- script: echo "My first Azure DevOps pipeline is running"
+- script: |
+    echo "Creating directories..."
+    mkdir -p /home/apmosys/Downloads/Arpan/demo
+    echo "Directory created successfully"
+  displayName: 'Create Arpan/demo directory'
+
 
