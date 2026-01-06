@@ -9,36 +9,27 @@ trigger:
 pool:
   name: Self-hosted
 
-variables:
-  SONAR_TOKEN: $(SONAR_TOKEN) # Secret variable in Azure DevOps
-
 steps:
-# 1️⃣ Prepare SonarQube
 - task: SonarQubePrepare@7
   inputs:
-    SonarQube: 'My_SonarQube'        # <-- Your Service Connection name
+    SonarQube: 'My_SonarQube'
     scannerMode: 'CLI'
     configMode: 'manual'
-    cliProjectKey: 'demo-project'    # <-- Simple key, no spaces
-    cliProjectName: 'demo-project'   # <-- Name shown in SonarQube
+    cliProjectKey: 'demo-project'
+    cliProjectName: 'demo-project'
     cliSources: '.'
     extraProperties: |
-      # Force Community Edition: no branches
       sonar.branch.name=
       sonar.pullrequest.key=
       sonar.pullrequest.branch=
       sonar.pullrequest.base=
 
-# 2️⃣ Build your project (optional)
 - script: |
-    echo "Running build..."
-    # Your build commands here, e.g., mvn clean install or dotnet build
+    echo "Build step (optional)"
   displayName: 'Build'
 
-# 3️⃣ Analyze code
 - task: SonarQubeAnalyze@7
 
-# 4️⃣ Publish results to SonarQube dashboard
 - task: SonarQubePublish@7
   inputs:
     pollingTimeoutSec: '300'
