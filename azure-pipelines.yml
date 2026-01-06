@@ -3,29 +3,28 @@
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
 
-trigger:
+ttrigger:
 - main
 
 pool:
   name: Self-hosted
 
 steps:
-- task: SonarQubePrepare@7
-  inputs:
-    SonarQube: 'My_SonarQube'
-    scannerMode: 'CLI'
-    configMode: 'manual'
-    cliProjectKey: 'demo'
-    cliProjectName: 'Demo'
-    cliSources: '.'
-    extraProperties: |
-      sonar.branch.name=
-      sonar.pullrequest.key=
-      sonar.pullrequest.branch=
-      sonar.pullrequest.base=
+- script: |
+    echo "Installing SonarScanner"
+    wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.8.0.2856-linux.zip
+    unzip -o sonar-scanner-cli-4.8.0.2856-linux.zip
+    sudo mv sonar-scanner-4.8.0.2856-linux /opt/sonar-scanner
+    export PATH=/opt/sonar-scanner/bin:$PATH
+    sonar-scanner --version
+  displayName: "Install SonarScanner"
 
-- task: SonarQubeAnalyze@7
-
-- task: SonarQubePublish@7
-  inputs:
-    pollingTimeoutSec: '300'
+- script: |
+    export PATH=/opt/sonar-scanner/bin:$PATH
+    sonar-scanner \
+      -Dsonar.projectKey=demo \
+      -Dsonar.projectName=Demo \
+      -Dsonar.sources=. \
+      -Dsonar.host.url=http://172.1.17.77:9000 \
+      -Dsonar.login=$(SONAR_TOKEN)
+  displayName: "Run SonarQube Analysis"
