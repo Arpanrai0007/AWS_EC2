@@ -18,6 +18,11 @@ steps:
     cliProjectKey: 'demo-project'
     cliProjectName: 'demo-project'
     cliSources: '.'
+    extraProperties: |
+      sonar.branch.name=
+      sonar.pullrequest.key=
+      sonar.pullrequest.branch=
+      sonar.pullrequest.base=
 
 - script: |
     echo "Build step"
