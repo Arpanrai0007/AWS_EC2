@@ -20,6 +20,9 @@ steps:
     cliSources: '.'
     extraProperties: |
       sonar.branch.name=
+      sonar.pullrequest.key=
+      sonar.pullrequest.branch=
+      sonar.pullrequest.base=
 
 - task: SonarQubeAnalyze@7
 
