@@ -10,10 +10,17 @@ pool:
   name: Self-hosted
 
 steps:
-- script: |
-    echo "Creating directories..."
-    mkdir -p /home/apmosys/Downloads/Arpan/demo
-    echo "Directory created successfully"
-  displayName: 'Create Arpan/demo directory'
+- task: SonarQubePrepare@7
+  inputs:
+    SonarQube: 'My_SonarQube'
+    scannerMode: 'CLI'
+    configMode: 'manual'
+    cliProjectKey: 'demo'
+    cliProjectName: 'Demo'
+    cliSources: '.'
 
+- task: SonarQubeAnalyze@7
 
+- task: SonarQubePublish@7
+  inputs:
+    pollingTimeoutSec: '300'
