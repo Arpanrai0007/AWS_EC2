@@ -18,6 +18,8 @@ steps:
     cliProjectKey: 'demo'
     cliProjectName: 'Demo'
     cliSources: '.'
+    extraProperties: |
+      sonar.branch.name=
 
 - task: SonarQubeAnalyze@7
 
