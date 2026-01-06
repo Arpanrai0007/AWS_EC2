@@ -10,21 +10,21 @@ pool:
   name: Self-hosted
 
 steps:
-- script: |
-    echo "Installing SonarScanner"
-    wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.8.0.2856-linux.zip
-    unzip -o sonar-scanner-cli-4.8.0.2856-linux.zip
-    sudo mv sonar-scanner-4.8.0.2856-linux /opt/sonar-scanner
-    export PATH=/opt/sonar-scanner/bin:$PATH
-    sonar-scanner --version
-  displayName: "Install SonarScanner"
+- task: SonarQubePrepare@7
+  inputs:
+    SonarQube: 'My_SonarQube'
+    scannerMode: 'CLI'
+    configMode: 'manual'
+    cliProjectKey: 'demo-project'
+    cliProjectName: 'demo-project'
+    cliSources: '.'
 
 - script: |
-    export PATH=/opt/sonar-scanner/bin:$PATH
-    sonar-scanner \
-      -Dsonar.projectKey=demo \
-      -Dsonar.projectName=Demo \
-      -Dsonar.sources=. \
-      -Dsonar.host.url=http://172.1.17.77:9000 \
-      -Dsonar.login=$(SONAR_TOKEN)
-  displayName: "Run SonarQube Analysis"
+    echo "Build step"
+  displayName: 'Build'
+
+- task: SonarQubeAnalyze@7
+
+- task: SonarQubePublish@7
+  inputs:
+    pollingTimeoutSec: '300'
