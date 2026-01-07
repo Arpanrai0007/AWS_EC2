@@ -10,7 +10,7 @@ pool:
   name: Self-hosted
 
 steps:
-- task: SonarQubePrepare@7
+- task: SonarQubePrepare@8
   inputs:
     SonarQube: 'My_SonarQube'
     scannerMode: 'CLI'
