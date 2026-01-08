@@ -10,26 +10,18 @@ pool:
   name: Self-hosted
 
 steps:
-- task: SonarQubePrepare@8
-  inputs:
-    SonarQube: 'My_SonarQube'
-    scannerMode: 'CLI'
-    configMode: 'manual'
-    cliProjectKey: 'demo-project'
-    cliProjectName: 'demo-project'
-    cliSources: '.'
-    extraProperties: |
-      sonar.branch.name=
-      sonar.pullrequest.key=
-      sonar.pullrequest.branch=
-      sonar.pullrequest.base=
+- script: |
+    cd dotnet-ci-pipeline
+    dotnet restore
+  displayName: 'Restore'
 
 - script: |
-    echo "Build step (optional)"
+    cd dotnet-ci-pipeline
+    dotnet build --configuration Release
   displayName: 'Build'
 
-- task: SonarQubeAnalyze@7
+- script: |
+    cd dotnet-ci-pipeline
+    dotnet test
+  displayName: 'Test'
 
-- task: SonarQubePublish@7
-  inputs:
-    pollingTimeoutSec: '300'
