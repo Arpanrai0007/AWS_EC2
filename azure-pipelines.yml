@@ -15,15 +15,13 @@ steps:
 
 # 2. Restore & Build the .NET project
 - script: |
-    cd $(Build.SourcesDirectory)
+    cd $(Build.SourcesDirectory)/Project/DemoApp
     dotnet restore
     dotnet build --configuration Release
   displayName: 'Restore & Build .NET Project'
 
-# Optional: Run the app
+# 3. Run the app
 - script: |
-    cd $(Build.SourcesDirectory)
+    cd $(Build.SourcesDirectory)/Project/DemoApp
     dotnet run
   displayName: 'Run .NET App'
-
-
