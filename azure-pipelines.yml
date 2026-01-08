@@ -4,24 +4,26 @@
 # https://aka.ms/yaml
 
 trigger:
-- main
+- main   # or your branch name
 
 pool:
   name: Self-hosted
 
 steps:
+# 1. Checkout the Git repo
+- checkout: self
+
+# 2. Restore & Build the .NET project
 - script: |
-    cd dotnet-ci-pipeline
+    cd $(Build.SourcesDirectory)
     dotnet restore
-  displayName: 'Restore'
-
-- script: |
-    cd dotnet-ci-pipeline
     dotnet build --configuration Release
-  displayName: 'Build'
+  displayName: 'Restore & Build .NET Project'
 
+# Optional: Run the app
 - script: |
-    cd dotnet-ci-pipeline
-    dotnet test
-  displayName: 'Test'
+    cd $(Build.SourcesDirectory)
+    dotnet run
+  displayName: 'Run .NET App'
+
 
