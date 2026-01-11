@@ -4,24 +4,34 @@
 # https://aka.ms/yaml
 
 trigger:
-- main   # or your branch name
+  branches:
+    include:
+      - dev   # Pipeline triggers on dev branch push
 
 pool:
-  name: Self-hosted
+  name: Default   # Use your Windows agent pool
 
 steps:
-# 1. Checkout the Git repo
-- checkout: self
+  - checkout: self
+    persistCredentials: true  # Keep credentials so the pipeline can push
 
-# 2. Restore & Build the .NET project
-- script: |
-    cd $(Build.SourcesDirectory)/Project/DemoApp
-    dotnet restore
-    dotnet build --configuration Release
-  displayName: 'Restore & Build .NET Project'
+  - task: PowerShell@2
+    displayName: Merge dev into main
+    inputs:
+      targetType: inline
+      script: |
+        # Set Git user for merge commit
+        git config user.name "Arpan Rai"
+        git config user.email "arpankumarrai007@gmail.com"
 
-# 3. Run the app
-- script: |
-    cd $(Build.SourcesDirectory)/Project/DemoApp
-    dotnet run
-  displayName: 'Run .NET App'
+        # Fetch all branches
+        git fetch origin
+
+        # Checkout main branch
+        git checkout main
+
+        # Merge dev into main automatically
+        git merge origin/dev --no-ff -m "Automated merge of dev into main"
+
+        # Push the merged main branch
+        git push origin main
