@@ -4,25 +4,23 @@
 # https://aka.ms/yaml
 
 trigger:
-  branches:
-    include:
-      - dev   # Trigger on dev push
+  - dev   
 
 pool:
-  name: Self-hosted   # Your self-hosted Linux agent pool
+  name: Self-hosted  
 
 steps:
   # Checkout with credentials so push works
   - checkout: self
     persistCredentials: true
 
-  # Merge dev into master
+  # Merge dev into master (auto-resolve conflicts)
   - task: Bash@3
-    displayName: Merge dev into master
+    displayName: Merge dev into master (auto-resolve conflicts)
     inputs:
       targetType: inline
       script: |
-        set -e
+        set -euo pipefail
 
         echo "Fetching latest branches"
         git fetch origin
@@ -31,9 +29,8 @@ steps:
         git checkout master
         git pull origin master
 
-        echo "Merge dev into master"
-        git merge origin/dev --no-ff
-
+        echo "Merge dev into master (auto-resolve conflicts by taking dev)"
+        git merge origin/dev -X theirs --no-ff --allow-unrelated-histories
 
         echo "Push to master"
         git push origin master
