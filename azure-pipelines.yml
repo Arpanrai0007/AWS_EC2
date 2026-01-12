@@ -4,34 +4,33 @@
 # https://aka.ms/yaml
 
 trigger:
-  branches:
-    include:
-      - dev   
+  - dev   
 
 pool:
-  name: Self-hosted   
+  name: Self-hosted  
 
 steps:
+  # Checkout with credentials so push works
   - checkout: self
-    persistCredentials: true  
+    persistCredentials: true
 
-  - task: PowerShell@2
-    displayName: Merge dev into master
+  # Merge dev into master (auto-resolve conflicts)
+  - task: Bash@3
+    displayName: Merge dev into master (auto-resolve conflicts)
     inputs:
       targetType: inline
       script: |
-        # Set Git user for merge commit
-        git config user.name "Arpan Rai"
-        git config user.email "arpankumarrai007@gmail.com"
+        set -euo pipefail
 
-        # Fetch all branches
+        echo "Fetching latest branches"
         git fetch origin
 
-        # Checkout master branch
+        echo "Checkout master"
         git checkout master
+        git pull origin master
 
-        # Merge dev into master automatically
-        git merge origin/dev --no-ff -m "Automated merge of dev into master"
+        echo "Merge dev into master (auto-resolve conflicts by taking dev)"
+        git merge origin/dev -X theirs --no-ff --allow-unrelated-histories
 
-        # Push the merged master branch
+        echo "Push to master"
         git push origin master
