@@ -4,24 +4,35 @@
 # https://aka.ms/yaml
 
 trigger:
-- main   # or your branch name
+  branches:
+    include:
+      - dev   # Trigger on dev push
 
 pool:
-  name: Self-hosted
+  name: Self-hosted   # Your self-hosted Linux agent pool
 
 steps:
-# 1. Checkout the Git repo
-- checkout: self
+  # Checkout with credentials so push works
+  - checkout: self
+    persistCredentials: true
 
-# 2. Restore & Build the .NET project
-- script: |
-    cd $(Build.SourcesDirectory)/Project/DemoApp
-    dotnet restore
-    dotnet build --configuration Release
-  displayName: 'Restore & Build .NET Project'
+  # Merge dev into master
+  - task: Bash@3
+    displayName: Merge dev into master
+    inputs:
+      targetType: inline
+      script: |
+        set -e
 
-# 3. Run the app
-- script: |
-    cd $(Build.SourcesDirectory)/Project/DemoApp
-    dotnet run
-  displayName: 'Run .NET App'
+        echo "Fetching latest branches"
+        git fetch origin
+
+        echo "Checkout master"
+        git checkout master
+        git pull origin master
+
+        echo "Merge dev into master"
+        git merge origin/dev --no-ff
+
+        echo "Push to master"
+        git push origin master
