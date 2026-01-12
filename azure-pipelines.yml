@@ -32,7 +32,7 @@ steps:
         git pull origin master
 
         echo "Merge dev into master"
-        git merge origin/dev --no-ff --allow-unrelated-histories
+        git merge origin/dev --no-ff
 
 
         echo "Push to master"
