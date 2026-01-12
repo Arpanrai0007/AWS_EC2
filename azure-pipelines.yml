@@ -9,14 +9,14 @@ trigger:
       - dev   # Pipeline triggers on dev branch push
 
 pool:
-  name: Default   # Use your Windows agent pool
+  name: Self-hosted   # Use your Windows agent pool
 
 steps:
   - checkout: self
     persistCredentials: true  # Keep credentials so the pipeline can push
 
   - task: PowerShell@2
-    displayName: Merge dev into main
+    displayName: Merge dev into master
     inputs:
       targetType: inline
       script: |
@@ -27,11 +27,11 @@ steps:
         # Fetch all branches
         git fetch origin
 
-        # Checkout main branch
-        git checkout main
+        # Checkout master branch
+        git checkout master
 
-        # Merge dev into main automatically
-        git merge origin/dev --no-ff -m "Automated merge of dev into main"
+        # Merge dev into master automatically
+        git merge origin/dev --no-ff -m "Automated merge of dev into master"
 
-        # Push the merged main branch
-        git push origin main
+        # Push the merged master branch
+        git push origin master
