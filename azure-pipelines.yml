@@ -6,14 +6,14 @@
 trigger:
   branches:
     include:
-      - dev   # Pipeline triggers on dev branch push
+      - dev   
 
 pool:
-  name: Self-hosted   # Use your Windows agent pool
+  name: Self-hosted   
 
 steps:
   - checkout: self
-    persistCredentials: true  # Keep credentials so the pipeline can push
+    persistCredentials: true  
 
   - task: PowerShell@2
     displayName: Merge dev into master
